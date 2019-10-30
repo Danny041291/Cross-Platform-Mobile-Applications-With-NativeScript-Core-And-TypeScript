@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Native Typescript App</string>
+    <string name="title_activity_kimera">My Native Typescript App</string>
+    <string name="hello">Ciao!</string>
+    <string formatted="false" name="hello_replace">Ciao %s!</string>
+    <string formatted="false" name="multi_replace">Possiamo sostituire direttamente dall'xml: %s o dal modello: %s</string>
+</resources>
