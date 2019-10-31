@@ -17,6 +17,7 @@ https://docs.nativescript.org/ui/components.
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     --> 
     <StackLayout class="login-panel">
+        <Image src="res://logo" stretch="none" />
         <Label text="Login" class="title" />
         <TextField text="{{ username }}" hint="Username" />
         <TextField text="{{ password }}" hint="Password" secure="true"/>

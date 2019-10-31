@@ -14,4 +14,6 @@ export interface ICameraManager {
 
     takePhoto(saveToGallery: boolean) : Promise<void>;
 
+    dispose(): void;
+
 }

@@ -10,9 +10,9 @@ export class LoginViewModel extends Observable {
     @Injectable
     loginService: LoginService;
 
-    @ObservableProperty username: string;
-    @ObservableProperty password: string;
-    @ObservableProperty rememberMe: boolean;
+    @ObservableProperty() username: string;
+    @ObservableProperty() password: string;
+    @ObservableProperty() rememberMe: boolean;
 
     constructor() {
         super();

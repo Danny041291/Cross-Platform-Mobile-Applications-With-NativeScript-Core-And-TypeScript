@@ -9,9 +9,7 @@ import { CameraManager } from "~/managers/camera-manager";
 import { GPSManager } from "~/managers/gps-manager";
 import { SocketManager } from "~/managers/socket-manager";
 import { IoCContainer } from "~/infrastructure/ioc-container";
-
-const SETTINGS_STORAGE_KEY = "_SETTINGS_";
-const USER_STORAGE_KEY = "_USER_";
+import { SETTINGS_STORAGE_KEY, USER_STORAGE_KEY } from "./constant";
 
 export class Bindings {
 
