@@ -16,6 +16,23 @@ The imported CSS rules must precede all other types of rules.
     font-size: 18;
 }
 
+.sidedrawer-header {
+	height: 50;
+}
+
+.sidedrawer-header-brand {
+	font-weight: bold;
+}
+
+.sidedrawer-list-item-text {
+	padding: 20 0 20 20;
+	border-width: 0;
+}
+
+.page {
+
+}
+
 .title {
     font-weight: bold;
     font-size: 20;

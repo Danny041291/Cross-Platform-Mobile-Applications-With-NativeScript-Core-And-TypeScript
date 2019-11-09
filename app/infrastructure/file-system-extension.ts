@@ -1,34 +1,16 @@
 import { File, Folder } from "tns-core-modules/file-system";
-import * as fs from "tns-core-modules/file-system/file-system";
 
 declare module 'tns-core-modules/file-system' {
     export interface File {
-        copy(destination: Folder): void;
-        toBase64(): string;
-    }
-    export interface Folder {
-        copy(destination: Folder): void;
+        copy(name?: string, destination?: Folder): File;
     }
 }
 
-File.prototype.copy = function (this: File, destination: Folder) {
-    var file = this.readSync();
-    var target = destination.getFile(this.name);
-    target.writeSync(file);
-};
-
-File.prototype.toBase64 = function (this: File) {
-    var file = this.readSync();
-    return file.toString('base64');
-};
-
-Folder.prototype.copy = async function (this: Folder, destination: Folder) {
-    var entities = await this.getEntities();
-    entities.forEach(entity => {
-        var element: File | Folder;
-        if (!fs.Folder.exists(entity.path))
-            element = entity as File;
-        else element = entity as Folder;
-        element.copy(destination);
-    });
+File.prototype.copy = function (this: File, name?: string, destination?: Folder): File {
+    var text = this.readTextSync();
+    if (name == null) name = this.name + ' (Copy)' + this.extension;
+    if (destination == null) destination = this.parent;
+    var target = destination.getFile(name);
+    target.writeTextSync(text);
+    return target;
 };

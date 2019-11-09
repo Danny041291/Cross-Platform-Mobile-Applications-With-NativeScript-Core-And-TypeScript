@@ -1,8 +1,10 @@
-import { CameraPlus } from "@nstudio/nativescript-camera-plus";
+import { CameraPlus, ICameraOptions } from "@nstudio/nativescript-camera-plus";
 
 export interface ICameraManager {
 
-    initCamera(cam: CameraPlus) : void;
+    isEnabled: boolean;
+
+    initCamera(cam: CameraPlus, options: ICameraOptions) : void;
 
     startRecordingVideo(saveToGallery: boolean) : Promise<void>;
 

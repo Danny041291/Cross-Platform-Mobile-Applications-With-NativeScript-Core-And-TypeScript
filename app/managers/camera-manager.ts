@@ -1,4 +1,4 @@
-import { CameraPlus } from '@nstudio/nativescript-camera-plus';
+import { CameraPlus, ICameraOptions } from '@nstudio/nativescript-camera-plus';
 import { ICameraManager } from './interfaces/icamera-manager';
 import { LiteEvent } from '~/infrastructure/lite-event';
 
@@ -14,7 +14,17 @@ export class CameraManager implements ICameraManager {
     private readonly onVideoRecordingStarted = new LiteEvent<any>();
     private readonly onVideoRecordingFinished = new LiteEvent<any>();
 
-    public initCamera(cameraView: any): void {
+    public options: ICameraOptions;
+
+    get isEnabled(): boolean {
+        return this._cam != null && this._cam.isEnabled;
+    }
+
+    set isEnabled(isEnabled: boolean) {
+        this._cam.isEnabled = isEnabled;
+    }
+
+    public initCamera(cameraView: any, options: ICameraOptions): void {
         this._cam = cameraView as CameraPlus;
         this._cam.on(CameraPlus.errorEvent, this.onError.trigger);
         this._cam.on(CameraPlus.toggleCameraEvent, this.onCameraToggle.trigger);
@@ -23,6 +33,7 @@ export class CameraManager implements ICameraManager {
         this._cam.on(CameraPlus.videoRecordingReadyEvent, this.onVideoRecordingReady.trigger);
         this._cam.on(CameraPlus.videoRecordingStartedEvent, this.onVideoRecordingStarted.trigger);
         this._cam.on(CameraPlus.videoRecordingFinishedEvent, this.onVideoRecordingFinished.trigger);
+        this.options = options;
     }
 
     public async startRecordingVideo(saveToGallery: boolean): Promise<void> {
@@ -53,7 +64,7 @@ export class CameraManager implements ICameraManager {
     }
 
     public dispose(): void {
-        if (this._cam == null)throw Error("Camera not initialized.");
+        if (this._cam == null) throw Error("Camera not initialized.");
         this._cam.disposeNativeView();
     }
 

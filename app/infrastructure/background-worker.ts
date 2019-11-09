@@ -8,15 +8,16 @@ export abstract class BackgroundWorker<T> {
         this._threadInfo = new ThreadInfo();
     }
 
-    public async start(data: any): Promise<T> {
-        return ThreadFactory.run<T>(data, this.loop, true, this._threadInfo);
+    public start(data?: any, onDataAvailable?: (data: T) => void, onError?: (error: string) => void): void {
+        ThreadFactory.start<T>(this.loop, data, onDataAvailable, onError, this._threadInfo);
     }
 
     public stop() {
-        // Error if thread info is null
+        if (this._threadInfo.Id == -1) throw Error("Worker not started.");
         ThreadFactory.terminate(this._threadInfo.Id);
+        this._threadInfo = new ThreadInfo();
     }
 
-    public abstract loop(data: any): T;
+    protected abstract loop(data?: any): T;
 
 }

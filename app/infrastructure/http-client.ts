@@ -2,11 +2,12 @@ import { IHttpClient } from "./interfaces/ihttp-client";
 import { User } from "~/models/user";
 import { environment } from "~/environments/environment";
 import { Injectable } from "./injectable-decorator";
+import { LoginService } from "~/services/login-service";
 
 export class HttpClient implements IHttpClient {
 
     @Injectable
-    user: User;
+    loginService: LoginService;
 
     async put<T>(url: string, content: any, headers?: any): Promise<T> {
         var request = request({
@@ -48,8 +49,8 @@ export class HttpClient implements IHttpClient {
 
     private getHeaders(headers?: any): any {
         headers = headers != null ? headers : { 'Content-Type': 'application/json' };
-        if (this.user.logged)
-            headers['Authorization'] = `Bearer ${this.user.token}`;
+        if (this.loginService.user.isLogged)
+            headers['Authorization'] = `Bearer ${this.loginService.user.token}`;
         return headers;
     }
 
@@ -73,13 +74,13 @@ export class HttpClient implements IHttpClient {
     private async refreshToken(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                let body = `refreshToken="${this.user.refreshToken}"&clientId=${environment.clientId}&clientSecret=${environment.clientSecret}`;
+                let body = `refreshToken="${this.loginService.user.refreshToken}"&clientId=${environment.clientId}&clientSecret=${environment.clientSecret}`;
                 let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 var user = await this.post<User>(`${environment.refreshTokenUrl}`, body, headers);
                 if (user == null) reject();
-                this.user.token = user.token;
-                this.user.refreshToken = user.refreshToken;
-                this.user.update();
+                this.loginService.user.token = user.token;
+                this.loginService.user.refreshToken = user.refreshToken;
+                this.loginService.user.update();
                 resolve();
             } catch (error) {
                 reject(error);

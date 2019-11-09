@@ -4,20 +4,22 @@ of which NativeScript renders with a platform-specific iOS or Android native con
 You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page">
- <Label text="{{ accelerometerData }}" />
-    <GridLayout horizontalAlignment="center" columns="auto, auto, auto, auto, *" rows="auto, auto, auto, auto, *"> 
-        <Button text="Test Dialog" row="0" col="0" tap="{{ onTestDialogButtonTap }}" />
-        <Button text="Test Toast" row="0" col="1" tap="{{ onTestToastButtonTap }}" />
-        <Button text="Test Notification" row="1" col="0" tap="{{ onTestNotificationButtonTap }}" />
-        <Button text="Test Accelerometer" row="1" col="1" tap="{{ onTestAccelerometerButtonTap }}" />
-        <Button text="Test GPS" row="2" col="0" tap="{{ onTestGPSButtonTap }}" />
-        <Button text="Test Camera" row="2" col="1" tap="{{ onTestCameraButtonTap }}" />
-        <Button text="Test Socket" row="3" col="0" tap="{{ onTestSocketButtonTap }}" />
-        <Button text="Test Worker" row="3" col="0" tap="{{ onTestWorkerButtonTap }}" />
-        <StackLayout row="4", col="0">
-          <!--
-            <Cam:CameraPlus height="{{ cameraHeight }}" id="camPlus" 
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" xmlns:Cam="@nstudio/nativescript-camera-plus" actionBarHidden="true" navigatingTo="navigatingTo" class="page">
+    <GridLayout horizontalAlignment="center" columns="auto" rows="auto, auto"> 
+        <GridLayout row="0" col="0" horizontalAlignment="center" columns="auto, auto" rows="auto, auto, auto, auto"> 
+            <Button text="Test Dialog" row="0" col="0" tap="{{ onTestDialogButtonTap }}" />
+            <Button text="Test Toast" row="0" col="1" tap="{{ onTestToastButtonTap }}" />
+            <Button text="Test Notification" row="1" col="0" tap="{{ onTestNotificationButtonTap }}" />
+            <Button text="Test Accelerometer" row="1" col="1" tap="{{ onTestAccelerometerButtonTap }}" />
+            <Button text="Test GPS" row="2" col="0" tap="{{ onTestGPSButtonTap }}" />
+            <Button text="Test Camera" row="2" col="1" tap="{{ onTestCameraButtonTap }}" />
+            <Button text="Test Socket" row="3" col="0" tap="{{ onTestSocketButtonTap }}" />
+            <Button text="Test Worker" row="3" col="1" tap="{{ onTestWorkerButtonTap }}" />
+        </GridLayout>
+        <StackLayout row="1" col="0" horizontalAlignment="center">
+            <Label visibility="{{ log ? 'visible' : 'hidden' }}" text="{{ log }}" />
+             <StackLayout visibility="{{ cameraEnabled ? 'visible' : 'hidden' }}" horizontalAlignment="center">
+                <Cam:CameraPlus height="{{ cameraManager.options.height }}" id="camPlus" 
                             loaded="camLoaded" galleryPickerMode="multiple" 
                             enableVideo="true" confirmVideo="false" 
                             saveToGallery="true" showCaptureIcon="true" 
@@ -27,17 +29,17 @@ https://docs.nativescript.org/ui/components.
                             insetButtons="true" insetButtonsPercent="0.02" 
                             imagesSelectedEvent="{{ imagesSelectedBinding }}" 
                             debug="true">
-              
-                    <GridLayout rows="auto, *, auto" columns="auto, *, auto">
-                        <Button row="0" col="0" text="Flash" class="btn-transparent" tap="{{ toggleFlash }}" />
-                        <Button row="0" col="2" text="Camera" class="btn-transparent" tap="{{ toggleCamera }}" />
-                        <Image row="1" col="1" horizontalAlignment="center" verticalAlignment="center" src="https://img.clipartfest.com/4ec5e2315cea92482da5546e1e7fca89_-pinterest-cute-clipart-snowman-clipart-transparent-background_300-300.png" stretch="none" />
-                        <Button row="2" col="0" text="Gallery" class="btn-transparent" tap="{{ openGallery }}" />
-                        <Button row="2" col="2" text="Take" class="btn-transparent" tap="{{ takePic }}" />
-                    </GridLayout>
-               
-            </Cam:CameraPlus>
-             -->
+                </Cam:CameraPlus>
+                <Image height="150" id="testImagePickResult" src="{{ testImage }}" stretch="aspectFit" />
+                <GridLayout rows="auto, auto, auto, auto" columns="*, *">
+                    <Button text="Record Video" tap="{{ cameraManager.startRecordingVideo }}" row="0" col="0" class="btn btn-primary" />
+                    <Button text="Stop Recording" tap="{{ cameraManager.stopRecordingVideo }}" row="0" col="1" class="btn btn-primary" />
+                    <Button text="Take Pic" tap="{{ cameraManager.takePhoto }}" row="1" col="0" class="btn btn-primary" />
+                    <Button text="Toggle Flash" tap="{{ cameraManager.toggleFlash }}" row="1" col="1" class="btn btn-primary" />
+                    <Button text="Toggle Camera" tap="{{ cameraManager.toggleCamera }}" row="2" col="0" class="btn btn-primary" />
+                    <Button text="Open Library" tap="{{ cameraManager.openCamPlusLibrary }}" row="2" col="1" class="btn btn-primary" />-->
+                </GridLayout>
+             </StackLayout>
         </StackLayout>
     </GridLayout>
 </Page>

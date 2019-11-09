@@ -1,8 +1,10 @@
-import { HttpClient } from "~/infrastructure/http-client";
 import { ILoginService } from "./interfaces/ilogin-service";
 import { User } from "~/models/user";
 import { environment } from "~/environments/environment";
 import { Injectable } from "~/infrastructure/injectable-decorator";
+import { USER_STORAGE_KEY } from "~/config/constant";
+import { Storage } from "~/infrastructure/storage";
+import { HttpClient } from "~/infrastructure/http-client";
 
 export class LoginService implements ILoginService {
 
@@ -10,7 +12,17 @@ export class LoginService implements ILoginService {
   httpClient: HttpClient;
 
   @Injectable
-  user: User;
+  storage: Storage;
+
+  private _user: User;
+
+  constructor() {
+    this._user = new User(this.storage, USER_STORAGE_KEY);
+  }
+
+  get user() {
+    return this._user;
+  }
 
   public async login(username: string, password: string, rememberMe: boolean): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -19,11 +31,11 @@ export class LoginService implements ILoginService {
         let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         var user = await this.httpClient.post<User>(`${environment.loginUrl}`, body, headers);
         if (user == null) reject("Login error.");
-        this.user.setStorageMode(!rememberMe);
-        this.user.username = username;
-        this.user.token = user.token;
-        this.user.refreshToken = user.refreshToken;
-        this.user.update();
+        this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe);
+        this._user.username = username;
+        this._user.token = user.token;
+        this._user.refreshToken = user.refreshToken;
+        this._user.update();
         resolve();
       } catch (error) {
         reject(error);
@@ -32,7 +44,7 @@ export class LoginService implements ILoginService {
   }
 
   public logout(): void {
-    this.user.delete();
+    this._user.delete();
   }
 
 }

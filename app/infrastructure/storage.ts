@@ -20,6 +20,7 @@ export class Storage implements IStorage {
             return;
         }
         appSettings.setString(key, this.encryptor.encrypt(JSON.stringify(data)));
+        appSettings.flush();
     }
 
     public load<T>(key: string, volatile?: boolean): T {
@@ -33,7 +34,10 @@ export class Storage implements IStorage {
     public delete(key: string, volatile?: boolean): void {
         if(volatile)
             this._volatileStorage.delete(key);
-        else appSettings.remove(key);
+        else {
+            appSettings.remove(key);
+            appSettings.flush();
+        }
     }
 
 }
