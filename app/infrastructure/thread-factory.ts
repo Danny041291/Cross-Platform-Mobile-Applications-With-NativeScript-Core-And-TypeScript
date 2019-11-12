@@ -1,11 +1,32 @@
 import { knownFolders } from "tns-core-modules/file-system";
-import { onMessage } from "~/worker_template.js";
+
+declare function postMessage(data: any): void;
+declare function run(data: any): void;
+
+function onmessage(message) {
+    console.log("MESSAGEEEEEEEEEEEEEEEE!");
+    var data = message.data;
+    if (!data) {
+        throw Error('Required arguments not found.');
+    } else if (data.execution == 'once') {
+        postMessage(run(data));
+    } else if (data.execution == 'loop') {
+        var loop = true;
+        while (loop) {
+            data = run(data);
+            if (data == null) {
+                loop = false;
+            } else {
+                postMessage(data);
+            }
+        }
+    }
+}
 
 export class ThreadInfo {
     public Id: number = -1;
 }
 
-// Warning: only self-contained JavaScript functions are allowed
 export class ThreadFactory {
 
     public static ActiveThreads: Map<number, Worker> = new Map<number, Worker>();
@@ -46,10 +67,17 @@ export class ThreadFactory {
         data['id'] = id;
         data['execution'] = 'loop';
         if (threadInfo != null) threadInfo.Id = id;
+        console.log("HELLOOOOOOOOOOOOOOOO");
         this.createWorker(id, func).then(() => {
+            var t = knownFolders.currentApp().getFile('worker_' + id + '.js');
+            console.log(t.readTextSync());
+            console.log("wokere ok");
             var worker = new Worker(knownFolders.currentApp().getFile("worker_" + id + ".js").path);
+            console.log("DONE1 !!!");
             this.ActiveThreads.set(id, worker);
+            console.log("DONE2 !!!");
             worker.postMessage(data);
+            console.log("SENDED!!!" + data);
             worker.onmessage = (message: any) => {
                 if (!message || !message.data) {
                     this._ids--;
@@ -81,10 +109,13 @@ export class ThreadFactory {
     }
 
     private static async createWorker(id: number, func: Function) {
+        var onMessageBody = onmessage.toString();
+        onMessageBody = onMessageBody.slice(onMessageBody.indexOf("{") + 1, onMessageBody.lastIndexOf("}"));
+        onMessageBody = "onmessage = function(message){" + onMessageBody + "}";
         var funcBody = func.toString();
         funcBody = funcBody.slice(funcBody.indexOf("{") + 1, funcBody.lastIndexOf("}"));
         funcBody = "function run(data){" + funcBody + "}";
-        var template = "require('globals');" + onMessage.toString() + ";" + funcBody + ";global.onmessage=onMessage;";
+        var template = onMessageBody + funcBody;
         var worker = knownFolders.currentApp().getFile('worker_' + id + '.js');
         await worker.writeText(template);
     }

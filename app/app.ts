@@ -6,6 +6,8 @@ purpose of the file is to pass control to the app’s first module.
 
 import * as application from "tns-core-modules/application";
 import { Bindings } from "~/config/bindings";
+import "globals";
+import "nativescript-i18n";
 
 Bindings.bind();
 application.run({ moduleName: "app-root" });

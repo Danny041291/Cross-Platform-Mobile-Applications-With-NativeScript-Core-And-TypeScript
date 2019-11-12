@@ -1,20 +1,43 @@
-import { CameraPlus, ICameraOptions } from "@nstudio/nativescript-camera-plus";
+import { CameraPlus, ICameraOptions, IChooseOptions } from "@nstudio/nativescript-camera-plus";
+import { LiteEvent } from "~/infrastructure/lite-event";
 
 export interface ICameraManager {
 
+    onError: LiteEvent<any>;
+    onCameraToggle: LiteEvent<any>;
+    onPhotoCaptured: LiteEvent<any>;
+    onImageSelected: LiteEvent<any>;
+    onVideoRecordingReady: LiteEvent<any>;
+    onVideoRecordingStarted: LiteEvent<any>;
+    onVideoRecordingFinished: LiteEvent<any>;
+
+    hasVideoRecordingPermission: boolean;
+    hasCameraPermission: boolean;
+    hasAudioPermission: boolean;
+    hasStoragePermissions: boolean;
     isEnabled: boolean;
 
-    initCamera(cam: CameraPlus, options: ICameraOptions) : void;
+    getVideoRecordingPermissions(): Promise<boolean>;
 
-    startRecordingVideo(saveToGallery: boolean) : Promise<void>;
+    getCameraPermissions(): Promise<boolean>;
 
-    stopRecordingVideo() : void;
+    getStoragePermissions(): Promise<boolean>;
+    
+    getAudioPermissions(): Promise<boolean>;
 
-    toggleFlash() : void;
+    initCamera(cam: CameraPlus, camerOptions: ICameraOptions, chooseOptions: IChooseOptions, showInsetIcons: boolean): void;
 
-    toggleCamera() : void;
+    startRecordingVideo(): Promise<void>;
 
-    takePhoto(saveToGallery: boolean) : Promise<void>;
+    stopRecordingVideo(): void;
+
+    toggleFlash(): void;
+
+    toggleCamera(): void;
+
+    takePhoto(): void;
+
+    openGallery(): Promise<any>;
 
     dispose(): void;
 

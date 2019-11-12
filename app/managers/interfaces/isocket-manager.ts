@@ -1,10 +1,18 @@
+import { LiteEvent } from "~/infrastructure/lite-event";
+
 export type SocketFunction = (args: any) => void
 
 export interface ISocketManager {
 
-    connected : boolean;
+    onConnect : LiteEvent<any>;
+    onReconnect : LiteEvent<any>;
+    onDisconnect : LiteEvent<any>;
+    onMessage : LiteEvent<any>;
+    onError : LiteEvent<any>;
 
-    connect(onConnect: SocketFunction, onReconnect: SocketFunction, onDisconnect: SocketFunction, onMessage: SocketFunction, onError: SocketFunction): void;
+    isConnected : boolean;
+
+    connect(url: string): void;
 
     disconnect(): void;
 

@@ -5,6 +5,5 @@ export const environment = {
     loginUrl: '',
     refreshTokenUrl: '',
     clientId: '',
-    clientSecret: '',
-    encryptKey: ''
+    clientSecret: ''
 };

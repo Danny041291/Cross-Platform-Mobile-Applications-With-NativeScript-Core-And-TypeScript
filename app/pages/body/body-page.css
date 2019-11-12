@@ -1,0 +1,28 @@
+.sidedrawer-header {
+	height: 50;
+}
+
+.sidedrawer-header-brand {
+    font-weight: bold;
+    font-size: 20;
+}
+
+.sidedrawer-list-item-text {
+    padding: 20 0 20 15;
+    border-width: 0;
+}
+
+.sidedrawer-list-item-button,
+.sidedrawer-list-item-button:active {
+    padding: 20 0 20 15;
+    android-elevation: 0;
+    background-color:transparent;
+    border-color:transparent;
+    border-radius: 0;
+    border-width: 0;
+    color: gray;
+    font-size: 16;
+    font-weight: normal;
+    text-align: left;
+    text-transform: capitalize;
+}

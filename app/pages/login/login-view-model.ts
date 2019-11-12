@@ -22,8 +22,8 @@ export class LoginViewModel extends Observable {
         const button: Button = <Button>args.object;
         const page: Page = button.page;
         try {
-            await this.loginService.login(this.username, this.password, this.rememberMe);
-            page.frame.navigate("home-page");
+            //await this.loginService.login(this.username, this.password, this.rememberMe);
+            page.frame.navigate("/pages/home/home-page");
         } catch (error) {
             // Show error message
         }

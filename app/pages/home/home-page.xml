@@ -5,41 +5,29 @@ You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
 <Page xmlns="http://schemas.nativescript.org/tns.xsd" xmlns:Cam="@nstudio/nativescript-camera-plus" actionBarHidden="true" navigatingTo="navigatingTo" class="page">
-    <GridLayout horizontalAlignment="center" columns="auto" rows="auto, auto"> 
+    <GridLayout horizontalAlignment="center" columns="auto" rows="auto, *"> 
         <GridLayout row="0" col="0" horizontalAlignment="center" columns="auto, auto" rows="auto, auto, auto, auto"> 
-            <Button text="Test Dialog" row="0" col="0" tap="{{ onTestDialogButtonTap }}" />
-            <Button text="Test Toast" row="0" col="1" tap="{{ onTestToastButtonTap }}" />
-            <Button text="Test Notification" row="1" col="0" tap="{{ onTestNotificationButtonTap }}" />
-            <Button text="Test Accelerometer" row="1" col="1" tap="{{ onTestAccelerometerButtonTap }}" />
-            <Button text="Test GPS" row="2" col="0" tap="{{ onTestGPSButtonTap }}" />
-            <Button text="Test Camera" row="2" col="1" tap="{{ onTestCameraButtonTap }}" />
-            <Button text="Test Socket" row="3" col="0" tap="{{ onTestSocketButtonTap }}" />
-            <Button text="Test Worker" row="3" col="1" tap="{{ onTestWorkerButtonTap }}" />
+            <Button text="{{ L('test_dialog') }}" row="0" col="0" tap="{{ onTestDialogButtonTap }}" />
+            <Button text="{{ L('test_toast') }}" row="0" col="1" tap="{{ onTestToastButtonTap }}" />
+            <Button text="{{ L('test_notification') }}" row="1" col="0" tap="{{ onTestNotificationButtonTap }}" />
+            <Button text="{{ L('test_accelerometer') }}" row="1" col="1" tap="{{ onTestAccelerometerButtonTap }}" />
+            <Button text="{{ L('test_gps') }}" row="2" col="0" tap="{{ onTestGPSButtonTap }}" />
+            <Button text="{{ L('test_camera') }}" row="2" col="1" tap="{{ onTestCameraButtonTap }}" />
+            <Button text="{{ L('test_socket') }}" row="3" col="0" tap="{{ onTestSocketButtonTap }}" />
+            <Button text="{{ L('test_worker') }}" row="3" col="1" tap="{{ onTestWorkerButtonTap }}" />
         </GridLayout>
         <StackLayout row="1" col="0" horizontalAlignment="center">
-            <Label visibility="{{ log ? 'visible' : 'hidden' }}" text="{{ log }}" />
-             <StackLayout visibility="{{ cameraEnabled ? 'visible' : 'hidden' }}" horizontalAlignment="center">
-                <Cam:CameraPlus height="{{ cameraManager.options.height }}" id="camPlus" 
-                            loaded="camLoaded" galleryPickerMode="multiple" 
-                            enableVideo="true" confirmVideo="false" 
-                            saveToGallery="true" showCaptureIcon="true" 
-                            showGalleryIcon="true" showToggleIcon="true" 
-                            showFlashIcon="true" confirmPhotos="true" 
-                            flashOffIcon="icon" autoSquareCrop="true"
-                            insetButtons="true" insetButtonsPercent="0.02" 
-                            imagesSelectedEvent="{{ imagesSelectedBinding }}" 
-                            debug="true">
-                </Cam:CameraPlus>
-                <Image height="150" id="testImagePickResult" src="{{ testImage }}" stretch="aspectFit" />
-                <GridLayout rows="auto, auto, auto, auto" columns="*, *">
-                    <Button text="Record Video" tap="{{ cameraManager.startRecordingVideo }}" row="0" col="0" class="btn btn-primary" />
-                    <Button text="Stop Recording" tap="{{ cameraManager.stopRecordingVideo }}" row="0" col="1" class="btn btn-primary" />
-                    <Button text="Take Pic" tap="{{ cameraManager.takePhoto }}" row="1" col="0" class="btn btn-primary" />
-                    <Button text="Toggle Flash" tap="{{ cameraManager.toggleFlash }}" row="1" col="1" class="btn btn-primary" />
-                    <Button text="Toggle Camera" tap="{{ cameraManager.toggleCamera }}" row="2" col="0" class="btn btn-primary" />
-                    <Button text="Open Library" tap="{{ cameraManager.openCamPlusLibrary }}" row="2" col="1" class="btn btn-primary" />-->
+            <Label visibility="{{ log ? 'visible' : 'collapse' }}" text="{{ log }}" />
+            <Cam:CameraPlus visibility="{{ cameraEnabled ? 'visible' : 'collapse' }}" height="{{ cameraHeight }}" id="camPlus">
+                <GridLayout rows="*, auto, auto, auto" columns="*, *">
+                    <Button text="Record Video" tap="{{ startRecordingVideo }}" row="1" col="0" />
+                    <Button text="Stop Recording" tap="{{ stopRecordingVideo }}" row="1" col="1"  />
+                    <Button text="Take Photo" tap="{{ takePhoto }}" row="2" col="0" />
+                    <Button text="Toggle Flash" tap="{{ toggleFlash }}" row="2" col="1" />
+                    <Button text="Toggle Camera" tap="{{ toggleCamera }}" row="3" col="0" />
+                    <Button text="Open Gallery" tap="{{ openGallery }}" row="3" col="1" />
                 </GridLayout>
-             </StackLayout>
+            </Cam:CameraPlus>
         </StackLayout>
     </GridLayout>
 </Page>

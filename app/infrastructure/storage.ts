@@ -14,25 +14,25 @@ export class Storage implements IStorage {
         this._volatileStorage = new Map<string, any>();
     }
 
-    public store(key: string, data: any, volatile?: boolean): void {
-        if(volatile) {
-            this._volatileStorage.set(key, this.encryptor.encrypt(JSON.stringify(data)));
+    public store(key: string, data: any, volatile?: boolean, encryptKey?: string): void {
+        if (volatile) {
+            this._volatileStorage.set(key, this.encryptor.encrypt(JSON.stringify(data), encryptKey));
             return;
         }
-        appSettings.setString(key, this.encryptor.encrypt(JSON.stringify(data)));
+        appSettings.setString(key, this.encryptor.encrypt(JSON.stringify(data), encryptKey));
         appSettings.flush();
     }
 
-    public load<T>(key: string, volatile?: boolean): T {
+    public load<T>(key: string, volatile?: boolean, encryptKey?: string): T {
         var encryptedString: string;
-        if(volatile)
+        if (volatile)
             encryptedString = this._volatileStorage.get(key);
         else encryptedString = appSettings.getString(key);
-        return encryptedString!=null ? JSON.parse(this.encryptor.decrypt(encryptedString)) : null;
+        return encryptedString != null ? JSON.parse(this.encryptor.decrypt(encryptedString, encryptKey)) : null;
     }
 
     public delete(key: string, volatile?: boolean): void {
-        if(volatile)
+        if (volatile)
             this._volatileStorage.delete(key);
         else {
             appSettings.remove(key);

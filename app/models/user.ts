@@ -5,6 +5,7 @@ export class User extends Storable<User> {
     public username: string;
     public token: string;
     public refreshToken: string;
+    public encryptKey: string;
 
     get isLogged() {
         return this.token != "";
@@ -14,6 +15,7 @@ export class User extends Storable<User> {
         this.username = user != null ? user.username : "";
         this.token = user != null ? user.token : "";
         this.refreshToken = user != null ? user.refreshToken : "";
+        this.encryptKey = user != null ? user.encryptKey : "";
     }
 
 }

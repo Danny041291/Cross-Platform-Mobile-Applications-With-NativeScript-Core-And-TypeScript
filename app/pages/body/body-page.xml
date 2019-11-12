@@ -3,19 +3,17 @@
         <sd:RadSideDrawer.drawerContent>
             <StackLayout class="sidedrawer-left">
                 <StackLayout class="sidedrawer-header">
-                    <Label text="Hello RadSideDrawer!" class="sidedrawer-header-brand" />
+                    <Label text="Menu" class="sidedrawer-header-brand" />
                 </StackLayout>
                 <StackLayout class="sidedrawer-content">
-                    <Label text="Home" class="sidedrawer-list-item-text" />
-                    <Label text="Basics" class="sidedrawer-list-item-text" />
-                    <Label text="Options" class="sidedrawer-list-item-text" />
-                    <Label text="Help" class="sidedrawer-list-item-text" />
-                    <Label text="Advanced" class="sidedrawer-list-item-text" />
+                    <Label visibility="{{ username ? 'visible' : 'collapse' }}" text="{{ username }}" class="sidedrawer-list-item-text" />
+                    <Button visibility="{{ username ? 'visible' : 'collapse' }}" text="Logout" onTap="{{ onLogoutButtonTap }}" class="sidedrawer-list-item-button" />
+                    <Button text="Quit" onTap="{{ onQuitButtonTap }}" class="sidedrawer-list-item-button" />
                 </StackLayout>
             </StackLayout>
         </sd:RadSideDrawer.drawerContent>
         <sd:RadSideDrawer.mainContent>
-            <Frame defaultPage="/pages/home/home-page">
+            <Frame defaultPage="/pages/login/login-page">
             </Frame>
         </sd:RadSideDrawer.mainContent>
     </sd:RadSideDrawer>

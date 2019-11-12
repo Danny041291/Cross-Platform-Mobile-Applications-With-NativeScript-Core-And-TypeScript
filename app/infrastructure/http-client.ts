@@ -56,35 +56,27 @@ export class HttpClient implements IHttpClient {
 
     private async fetchResponse<T>(request: any): Promise<T> {
         return new Promise(async (resolve, reject) => {
-            try {
-                var response = await request;
-                if (response.statusCode == 401) {
-                    await this.refreshToken();
-                    response = await request;
-                    if (response.statusCode == 401)
-                        reject("Unauthorized.");
-                    else resolve(response.content.toJSON());
-                } else resolve(response.content.toJSON());
-            } catch (error) {
-                reject(error);
-            }
+            var response = await request;
+            if (response.statusCode == 401) {
+                await this.refreshToken();
+                response = await request;
+                if (response.statusCode == 401)
+                    reject("Unauthorized.");
+                else resolve(response.content.toJSON());
+            } else resolve(response.content.toJSON());
         });
     }
 
     private async refreshToken(): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            try {
-                let body = `refreshToken="${this.loginService.user.refreshToken}"&clientId=${environment.clientId}&clientSecret=${environment.clientSecret}`;
-                let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                var user = await this.post<User>(`${environment.refreshTokenUrl}`, body, headers);
-                if (user == null) reject();
-                this.loginService.user.token = user.token;
-                this.loginService.user.refreshToken = user.refreshToken;
-                this.loginService.user.update();
-                resolve();
-            } catch (error) {
-                reject(error);
-            }
+            let body = `refreshToken="${this.loginService.user.refreshToken}"&clientId=${environment.clientId}&clientSecret=${environment.clientSecret}`;
+            let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            var user = await this.post<User>(`${environment.refreshTokenUrl}`, body, this.getHeaders(headers));
+            if (user == null) reject();
+            this.loginService.user.token = user.token;
+            this.loginService.user.refreshToken = user.refreshToken;
+            this.loginService.user.update();
+            resolve();
         });
     }
 

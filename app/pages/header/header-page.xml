@@ -1,10 +1,10 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page">
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page" loaded="onPageLoaded">
     <!--
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="My Native TypeScript App">
+        <ActionBar title="My NativeScript Core App">
            <android>
                 <NavigationButton icon="res://ic_menu" tap="{{ onMenuButtonTap }}" />
             </android>

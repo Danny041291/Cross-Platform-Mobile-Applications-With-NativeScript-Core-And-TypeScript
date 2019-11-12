@@ -5,6 +5,7 @@ import { Injectable } from "~/infrastructure/injectable-decorator";
 import { USER_STORAGE_KEY } from "~/config/constant";
 import { Storage } from "~/infrastructure/storage";
 import { HttpClient } from "~/infrastructure/http-client";
+import { LiteEvent } from "~/infrastructure/lite-event";
 
 export class LoginService implements ILoginService {
 
@@ -16,6 +17,9 @@ export class LoginService implements ILoginService {
 
   private _user: User;
 
+  public readonly onUserLogin = new LiteEvent<void>();
+  public readonly onUserLogout = new LiteEvent<void>();
+
   constructor() {
     this._user = new User(this.storage, USER_STORAGE_KEY);
   }
@@ -26,25 +30,24 @@ export class LoginService implements ILoginService {
 
   public async login(username: string, password: string, rememberMe: boolean): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      try {
-        let body = `username=${username}&password=${password}&clientId=${environment.clientId}`;
-        let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        var user = await this.httpClient.post<User>(`${environment.loginUrl}`, body, headers);
-        if (user == null) reject("Login error.");
-        this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe);
-        this._user.username = username;
-        this._user.token = user.token;
-        this._user.refreshToken = user.refreshToken;
-        this._user.update();
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
+      let body = `username=${username}&password=${password}&clientId=${environment.clientId}`;
+      let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+      var user = await this.httpClient.post<User>(`${environment.loginUrl}`, body, headers);
+      if (user == null) reject("Login error.");
+      this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe, user.encryptKey);
+      this._user.username = username;
+      this._user.token = user.token;
+      this._user.refreshToken = user.refreshToken;
+      this._user.encryptKey = user.encryptKey;
+      this._user.update();
+      this.onUserLogin.trigger();
+      resolve();
     });
   }
 
   public logout(): void {
     this._user.delete();
+    this.onUserLogout.trigger();
   }
 
 }
