@@ -4,21 +4,30 @@ import { LoginService } from "~/services/login-service";
 import { Button } from "tns-core-modules/ui/button";
 import { Page } from "tns-core-modules/ui/page";
 import { Injectable } from "~/infrastructure/injectable-decorator";
+import { RadDataForm } from "nativescript-ui-dataform";
 
 export class LoginViewModel extends Observable {
 
     @Injectable
     loginService: LoginService;
 
-    @ObservableProperty() username: string;
-    @ObservableProperty() password: string;
-    @ObservableProperty() rememberMe: boolean;
+    private _loginDataForm: RadDataForm;
 
-    constructor() {
+    @ObservableProperty()
+    loginForm = {
+        username: null,
+        password: null,
+        rememberMe: false
+    };
+
+    constructor(page: Page) {
         super();
+        this._loginDataForm = <RadDataForm>page.getViewById("loginForm");
     }
 
     async onLoginButtonTap(args: EventData): Promise<void> {
+        var valid = await this._loginDataForm.validateAll();
+        if (!valid) return;
         const button: Button = <Button>args.object;
         const page: Page = button.page;
         try {

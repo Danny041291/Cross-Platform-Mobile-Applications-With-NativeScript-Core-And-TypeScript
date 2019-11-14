@@ -10,7 +10,7 @@ describe("Login Page", () => {
 
   beforeEach(() => {
     loginService = jasmine.createSpyObj(LoginService);
-    loginViewModel = new LoginViewModel();
+   // loginViewModel = new LoginViewModel();
     loginViewModel.loginService = loginService;
   });
 

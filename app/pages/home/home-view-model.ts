@@ -158,7 +158,7 @@ export class HomeViewModel extends Observable {
         this.socketManager.onMessage.on((payload) => this.log = `LOG: Message '${payload.content}' received from ${payload.username}.`);
         this.socketManager.onConnect.on((payload) => {
             this.log = "LOG: Connected, sending message..."
-            this.socketManager.sendMessage("my self", "Hello!");
+            this.socketManager.sendMessage("John", "Hello!");
         });
         this.socketManager.connect(url);
     }
@@ -167,7 +167,7 @@ export class HomeViewModel extends Observable {
     async onTestWorkerButtonTap(args: EventData): Promise<void> {
         // More details here: https://github.com/NativeScript/worker-loader
         const worker = new TestWorker();
-        worker.postMessage("User");
+        worker.postMessage("John");
         worker.onmessage = message => this.log = message.data;
     }
 

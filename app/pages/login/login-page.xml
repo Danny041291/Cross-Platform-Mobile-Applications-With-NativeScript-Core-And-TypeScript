@@ -1,4 +1,4 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" actionBarHidden="true" navigatingTo="navigatingTo" class="page">
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" xmlns:df="nativescript-ui-dataform" actionBarHidden="true" navigatingTo="navigatingTo" class="page">
     <!--
     The StackLayout stacks UI components on the screen—either vertically or horizontally.
     In this case, the StackLayout does vertical stacking; you can change the stacking to
@@ -11,11 +11,29 @@
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     --> 
     <StackLayout>
-        <Image src="res://icon"/>
-        <Label text="Login" class="title" />
-        <TextField text="{{ username }}" hint="Username" />
-        <TextField text="{{ password }}" hint="Password" secure="true"/>
-        <Switch checked="{{ rememberMe }}" />
+        <Image src="res://icon" height="200"/>
+        <df:RadDataForm id="loginForm" source="{{ loginForm }}" >
+            <df:RadDataForm.properties>
+                <df:EntityProperty name="username" displayName="Username" index="0" >
+                     <df:EntityProperty.validators>
+                        <df:NonEmptyValidator />
+                    </df:EntityProperty.validators>
+                </df:EntityProperty>
+                <df:EntityProperty name="password" displayName="Password" index="1">
+                    <df:EntityProperty.editor>
+                        <df:PropertyEditor type="Password" />
+                    </df:EntityProperty.editor>
+                     <df:EntityProperty.validators>
+                        <df:NonEmptyValidator />
+                    </df:EntityProperty.validators>
+                </df:EntityProperty>
+                <df:EntityProperty name="rememberMe" displayName="Remember Me" index="2">
+                      <df:EntityProperty.editor>
+                        <df:PropertyEditor type="Switch" />
+                    </df:EntityProperty.editor>
+                </df:EntityProperty>
+            </df:RadDataForm.properties>
+        </df:RadDataForm>
         <Button text="Login" tap="{{ onLoginButtonTap }}" />
     </StackLayout>
 </Page>
