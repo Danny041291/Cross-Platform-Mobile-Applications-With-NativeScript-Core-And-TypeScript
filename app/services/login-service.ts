@@ -1,11 +1,11 @@
 import { ILoginService } from "./interfaces/ilogin-service";
 import { User } from "~/models/user";
-import { environment } from "~/environments/environment";
 import { Injectable } from "~/infrastructure/injectable-decorator";
 import { USER_STORAGE_KEY } from "~/config/constant";
 import { Storage } from "~/infrastructure/storage";
 import { HttpClient } from "~/infrastructure/http-client";
 import { LiteEvent } from "~/infrastructure/lite-event";
+import environment from "~/environments/environment";
 
 export class LoginService implements ILoginService {
 
@@ -30,9 +30,9 @@ export class LoginService implements ILoginService {
 
   public async login(username: string, password: string, rememberMe: boolean): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let body = `username=${username}&password=${password}&clientId=${environment.clientId}`;
+      let body = `username=${username}&password=${password}&clientId=${environment.current.clientId}`;
       let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-      var user = await this.httpClient.post<User>(`${environment.loginUrl}`, body, headers);
+      var user = await this.httpClient.post<User>(`${environment.current.loginUrl}`, body, headers);
       if (user == null) reject("Login error.");
       this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe, user.encryptKey);
       this._user.username = username;

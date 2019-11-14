@@ -1,8 +1,8 @@
 import { IHttpClient } from "./interfaces/ihttp-client";
 import { User } from "~/models/user";
-import { environment } from "~/environments/environment";
 import { Injectable } from "./injectable-decorator";
 import { LoginService } from "~/services/login-service";
+import environment from "~/environments/environment";
 
 export class HttpClient implements IHttpClient {
 
@@ -69,9 +69,9 @@ export class HttpClient implements IHttpClient {
 
     private async refreshToken(): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            let body = `refreshToken="${this.loginService.user.refreshToken}"&clientId=${environment.clientId}&clientSecret=${environment.clientSecret}`;
+            let body = `refreshToken="${this.loginService.user.refreshToken}"&clientId=${environment.current.clientId}&clientSecret=${environment.current.clientSecret}`;
             let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            var user = await this.post<User>(`${environment.refreshTokenUrl}`, body, this.getHeaders(headers));
+            var user = await this.post<User>(`${environment.current.refreshTokenUrl}`, body, this.getHeaders(headers));
             if (user == null) reject();
             this.loginService.user.token = user.token;
             this.loginService.user.refreshToken = user.refreshToken;

@@ -1,5 +1,5 @@
 export const current = {
-    production: true,
+    production: false,
     apiUrl: '/api',
     socketUrl: '',
     loginUrl: '',

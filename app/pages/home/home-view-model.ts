@@ -5,21 +5,17 @@ import { ObservableProperty } from "~/infrastructure/observable-property-decorat
 import { LocalNotifications } from "nativescript-local-notifications";
 import { CameraManager } from "~/managers/camera-manager";
 import { Page } from "tns-core-modules/ui/page/page";
-import { CounterWorker } from "~/workers/counter-worker";
+import * as TestWorker from "nativescript-worker-loader!../../workers/test-worker";
 import { Toasty } from 'nativescript-toasty';
 import { GPSManager } from "~/managers/gps-manager";
 import { AccelerometerManager } from "~/managers/accelerometer-manager";
 import { SocketManager } from "~/managers/socket-manager";
-import { File, knownFolders } from "tns-core-modules/file-system";
-import { environment } from "~/environments/environment";
+import environment from "~/environments/environment";
 
 export class HomeViewModel extends Observable {
 
     @Injectable
     cameraManager: CameraManager;
-
-    @Injectable
-    counterWorker: CounterWorker;
 
     @Injectable
     gpsManager: GPSManager;
@@ -157,7 +153,7 @@ export class HomeViewModel extends Observable {
     async onTestSocketButtonTap(args: EventData): Promise<void> {
         // More details here: https://github.com/triniwiz/nativescript-socketio
         //var url = "http://192.168.1.5:8080";
-        var url = environment.socketUrl;
+        var url = environment.current.socketUrl;
         this.log = "LOG: Connecting to '" + url + "' ...";
         this.socketManager.onMessage.on((payload) => this.log = `LOG: Message '${payload.content}' received from ${payload.username}.`);
         this.socketManager.onConnect.on((payload) => {
@@ -169,17 +165,10 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestWorkerButtonTap(args: EventData): Promise<void> {
-        /* this.log = "LOG:";
-         this.counterWorker.start({ x: 0 },
-             result => this.log = this.log + " " + result.x + ";",
-             error => this.log = " " + error);*/
-        console.log("HERE!!!");
-        if (File.exists((knownFolders.currentApp().getFile("workers/grayscaler.js").path))) console.log("EXISTS!!!");
-        var x = (knownFolders.currentApp().getFile("workers/grayscaler.js").path);
-        console.log(x);
-        var worker = new Worker(x);
-        worker.postMessage("Ts worker loader executed!");
-        // worker.onmessage = m => this.logWorkerMessage(m);
+        // More details here: https://github.com/NativeScript/worker-loader
+        const worker = new TestWorker();
+        worker.postMessage("User");
+        worker.onmessage = message => this.log = message.data;
     }
 
 }

@@ -6,7 +6,6 @@ import { Encryptor } from "~/infrastructure/encryptor";
 import * as CryptoJS from "crypto-js";
 import { GPSManager } from "~/managers/gps-manager";
 import { AccelerometerManager } from "~/managers/accelerometer-manager";
-import { CounterWorker } from "~/workers/counter-worker";
 import { SocketManager } from "~/managers/socket-manager";
 import { EventDispatcher } from "~/services/event-dispatcher";
 import { LoginService } from "~/services/login-service";
@@ -22,7 +21,6 @@ export class Bindings {
         IoCContainer.register(GPSManager);
         IoCContainer.register(AccelerometerManager);
         IoCContainer.register(SocketManager); 
-        IoCContainer.register(CounterWorker);
         IoCContainer.register(LoginService);
     }
 

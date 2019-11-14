@@ -1,9 +1,7 @@
-export const environment = {
-    production: false,
-    apiUrl: '/api',
-    socketUrl: '',
-    loginUrl: '',
-    refreshTokenUrl: '',
-    clientId: '',
-    clientSecret: ''
-};
+import * as prod from "~/environments/environment.prod";
+import * as debug from "~/environments/environment.debug";
+
+declare var isProduction: boolean;
+let environment = isProduction ? prod : debug;
+
+export default environment;

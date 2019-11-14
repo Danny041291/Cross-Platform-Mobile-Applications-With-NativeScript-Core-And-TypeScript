@@ -9,6 +9,11 @@
                     <Label visibility="{{ username ? 'visible' : 'collapse' }}" text="{{ username }}" class="sidedrawer-list-item-text" />
                     <Button visibility="{{ username ? 'visible' : 'collapse' }}" text="Logout" onTap="{{ onLogoutButtonTap }}" class="sidedrawer-list-item-button" />
                     <Button text="Quit" onTap="{{ onQuitButtonTap }}" class="sidedrawer-list-item-button" />
+                    <Repeater items="{{ menuFooterItems }}">
+                        <Repeater.itemTemplate>
+                            <Label text="{{ $value }}" class="sidedrawer-list-item-text" />
+                        </Repeater.itemTemplate>
+                    </Repeater>
                 </StackLayout>
             </StackLayout>
         </sd:RadSideDrawer.drawerContent>

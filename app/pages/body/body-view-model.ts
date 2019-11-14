@@ -16,6 +16,7 @@ export class BodyViewModel extends Observable {
     loginService: LoginService;
 
     @ObservableProperty() username: string;
+    @ObservableProperty() menuFooterItems = new Array<string>("Information", "About Us", "Privacy");
 
     private _drawer: any;
 
