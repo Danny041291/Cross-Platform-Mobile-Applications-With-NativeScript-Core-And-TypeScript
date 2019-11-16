@@ -14,7 +14,7 @@ export abstract class Storable<T> implements IStorable {
         this._volatile = volatile;
         this._encryptKey = encryptKey;
         var storable = this._storage.load<T>(storage_key, this._volatile, this._encryptKey);
-        this.load(storable,);
+        this.load(storable);
     }
 
     protected abstract load(storable: T): void;

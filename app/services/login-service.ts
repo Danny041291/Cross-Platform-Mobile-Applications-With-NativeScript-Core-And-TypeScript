@@ -6,6 +6,7 @@ import { Storage } from "~/infrastructure/storage";
 import { HttpClient } from "~/infrastructure/http-client";
 import { LiteEvent } from "~/infrastructure/lite-event";
 import environment from "~/environments/environment";
+import { UserDto } from "~/models/user-dto";
 
 export class LoginService implements ILoginService {
 
@@ -32,7 +33,7 @@ export class LoginService implements ILoginService {
     return new Promise(async (resolve, reject) => {
       let body = `username=${username}&password=${password}&clientId=${environment.current.clientId}`;
       let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-      var user = await this.httpClient.post<User>(`${environment.current.loginUrl}`, body, headers);
+      var user = await this.httpClient.post<UserDto>(`${environment.current.loginUrl}`, body, headers);
       if (user == null) reject("Login error.");
       this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe, user.encryptKey);
       this._user.username = username;

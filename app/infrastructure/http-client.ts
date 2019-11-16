@@ -62,8 +62,8 @@ export class HttpClient implements IHttpClient {
                 response = await request;
                 if (response.statusCode == 401)
                     reject("Unauthorized.");
-                else resolve(response.content.toJSON());
-            } else resolve(response.content.toJSON());
+                else resolve(response.content.toJSON() as T);
+            } else resolve(response.content.toJSON() as T);
         });
     }
 
