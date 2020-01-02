@@ -73,7 +73,7 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestAccelerometerButtonTap(args: EventData): Promise<void> {
-        // More details here: https://github.com/vakrilov/native-script-accelerometer
+        // More details at: https://github.com/vakrilov/native-script-accelerometer
         this.accelerometerManager.startDataReading((data) => {
             this.log = "LOG: X: " + Math.round(data.x * 1000) / 1000 + ", Y: " + Math.round(data.y * 1000) / 1000 + ", Z: " + Math.round(data.z * 1000) / 1000;
         });
@@ -81,7 +81,7 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestGPSButtonTap(args: EventData): Promise<void> {
-        // More details here: https://github.com/NativeScript/nativescript-geolocation
+        // More details at: https://github.com/NativeScript/nativescript-geolocation
         var hasPermission = await this.gpsManager.getPermissions();
         if (hasPermission) {
             var location = await this.gpsManager.getLocation();
@@ -91,13 +91,13 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestCameraButtonTap(args: EventData): Promise<void> {
-        // More details here: https://github.com/nstudio/nativescript-camera-plus
+        // More details at: https://github.com/nstudio/nativescript-camera-plus
         var cameraOptions = { height: 400, saveToGallery: false };
         var chooseOptions = { showImages: true, showVideos: true, height: 300 };
         this.cameraEnabled = true;
         this.cameraHeight = cameraOptions.height;
         this.cameraManager.initCamera(this._page.getViewById('camPlus'), cameraOptions, chooseOptions, false);
-        var hasCameraPermission = await this.cameraManager.getCameraPermissions().then();
+        var hasCameraPermission = await this.cameraManager.getCameraPermissions();
         if (!hasCameraPermission) {
             this.log = "LOG: Error during localization permissions request.";
             return;
@@ -151,8 +151,7 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestSocketButtonTap(args: EventData): Promise<void> {
-        // More details here: https://github.com/triniwiz/nativescript-socketio
-        //var url = "http://192.168.1.5:8080";
+        // More details at: https://github.com/triniwiz/nativescript-socketio
         var url = environment.current.socketUrl;
         this.log = "LOG: Connecting to '" + url + "' ...";
         this.socketManager.onMessage.on((payload) => this.log = `LOG: Message '${payload.content}' received from ${payload.username}.`);
@@ -165,7 +164,7 @@ export class HomeViewModel extends Observable {
 
     @Restart()
     async onTestWorkerButtonTap(args: EventData): Promise<void> {
-        // More details here: https://github.com/NativeScript/worker-loader
+        // More details at: https://github.com/NativeScript/worker-loader
         const worker = new TestWorker();
         worker.postMessage("John");
         worker.onmessage = message => this.log = message.data;
