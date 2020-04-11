@@ -18,7 +18,7 @@
             </StackLayout>
         </sd:RadSideDrawer.drawerContent>
         <sd:RadSideDrawer.mainContent>
-            <Frame defaultPage="/pages/login/login-page">
+            <Frame defaultPage="{{ accessPage }}">
             </Frame>
         </sd:RadSideDrawer.mainContent>
     </sd:RadSideDrawer>

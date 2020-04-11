@@ -26,7 +26,7 @@ export class HomeViewModel extends Observable {
     @Injectable
     socketManager: SocketManager;
 
-    @ObservableProperty() log: string;
+    @ObservableProperty() out: string;
     @ObservableProperty() cameraEnabled: boolean;
     @ObservableProperty() cameraHeight: number;
 
@@ -45,7 +45,7 @@ export class HomeViewModel extends Observable {
             message: "It's dialog here!",
             okButtonText: "OK"
         });
-        this.log = "LOG: Dialog closed."
+        this.out = "Dialog closed."
     }
 
     @Restart()
@@ -53,14 +53,14 @@ export class HomeViewModel extends Observable {
         // More details at: https://github.com/triniwiz/nativescript-toasty
         const toast = new Toasty({ text: 'Toast message' });
         toast.show();
-        this.log = "LOG: Toast showed."
+        this.out = "Toast shown."
     }
 
     @Restart()
     async onTestNotificationButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/EddyVerbruggen/nativescript-local-notifications
         var hasPermission = await LocalNotifications.hasPermission();
-        if (!hasPermission) throw Error("No permission for local notifications");
+        if (!hasPermission) throw Error("No permissions for local notifications");
         var scheduled = await LocalNotifications.schedule([{
             id: 1,
             title: 'Title',
@@ -68,14 +68,14 @@ export class HomeViewModel extends Observable {
             groupedMessages: ["First", "Second..."],
             groupSummary: "Group summary"
         }]);
-        this.log = "LOG: Notification '" + scheduled[0] + "' showed.";
+        this.out = "Notification '" + scheduled[0] + "' shown.";
     }
 
     @Restart()
     async onTestAccelerometerButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/vakrilov/native-script-accelerometer
         this.accelerometerManager.startDataReading((data) => {
-            this.log = "LOG: X: " + Math.round(data.x * 1000) / 1000 + ", Y: " + Math.round(data.y * 1000) / 1000 + ", Z: " + Math.round(data.z * 1000) / 1000;
+            this.out = "X: " + Math.round(data.x * 1000) / 1000 + ", Y: " + Math.round(data.y * 1000) / 1000 + ", Z: " + Math.round(data.z * 1000) / 1000;
         });
     }
 
@@ -85,8 +85,8 @@ export class HomeViewModel extends Observable {
         var hasPermission = await this.gpsManager.getPermissions();
         if (hasPermission) {
             var location = await this.gpsManager.getLocation();
-            this.log = "LOG: Latitude: " + location.latitude + ", Longitude: " + location.latitude;
-        } else this.log = "LOG: Error during localization permissions request.";
+            this.out = "Latitude: " + location.latitude + ", Longitude: " + location.latitude;
+        } else this.out = "Error during the localization permissions request.";
     }
 
     @Restart()
@@ -99,75 +99,78 @@ export class HomeViewModel extends Observable {
         this.cameraManager.initCamera(this._page.getViewById('camPlus'), cameraOptions, chooseOptions, false);
         var hasCameraPermission = await this.cameraManager.getCameraPermissions();
         if (!hasCameraPermission) {
-            this.log = "LOG: Error during localization permissions request.";
+            this.out = "Error during the camera permissions request.";
             return;
         }
         var hasVideoRecordingPermission = await this.cameraManager.getVideoRecordingPermissions();
         if (!hasVideoRecordingPermission) {
-            this.log = "LOG: Error during video recording permissions request.";
+            this.out = "Error during the video recording permissions request.";
             return;
         }
         var hasAudioPermission = await this.cameraManager.getAudioPermissions();
         if (!hasAudioPermission) {
-            this.log = "LOG: Error during audio permissions request.";
+            this.out = "Error during the audio permissions request.";
             return;
         }
         var hasStoragePermission = await this.cameraManager.getStoragePermissions();
         if (!hasStoragePermission) {
-            this.log = "LOG: Error during storage permissions request.";
+            this.out = "Error during the storage permissions request.";
             return;
         }
     }
 
     async startRecordingVideo(args: EventData): Promise<void> {
-        this.log = "LOG: Video recording started.";
+        this.out = "Video recording started.";
         return this.cameraManager.startRecordingVideo();
     }
 
     stopRecordingVideo(args: EventData): void {
         this.cameraManager.stopRecordingVideo();
-        this.log = "LOG: Video recording stopped.";
+        this.out = "Video recording stopped.";
     }
 
     takePhoto(args: EventData): void {
         this.cameraManager.takePhoto();
-        this.log = "LOG: Camera photo taked.";
+        this.out = "Camera photo taken.";
     }
 
     toggleFlash(args: EventData): void {
         this.cameraManager.toggleFlash();
-        this.log = "LOG: Flash toggled.";
+        this.out = "Flash toggled.";
     }
 
     toggleCamera(args: EventData): void {
         this.cameraManager.toggleCamera();
-        this.log = "LOG: Camera toggled.";
+        this.out = "Camera toggled.";
     }
 
     async openGallery(args: EventData): Promise<any> {
         await this.cameraManager.openGallery();
-        this.log = "LOG: Element choosed from gallery.";
+        this.out = "Element chosen from gallery.";
     }
 
     @Restart()
     async onTestSocketButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/triniwiz/nativescript-socketio
-        var url = environment.current.socketUrl;
-        this.log = "LOG: Connecting to '" + url + "' ...";
-        this.socketManager.onMessage.on((payload) => this.log = `LOG: Message '${payload.content}' received from ${payload.username}.`);
-        this.socketManager.onConnect.on((payload) => {
-            this.log = "LOG: Connected, sending message..."
-            this.socketManager.sendMessage("John", "Hello!");
+        this.out = "Connecting to socket...";
+        this.socketManager.onMessage.on((payload) => {
+            var from = this.socketManager.users.find(u => u.socketId == payload.from);
+            this.out = `Message '${payload.message}' received from '${from ? from.username : 'undefined'}'.`;
         });
-        this.socketManager.connect(url);
+        this.socketManager.onConnect.on((payload) => this.out = "Connected!");
+        this.socketManager.onUsersList.on((users) => {
+            this.out = "Sending message..."
+            this.socketManager.sendMessage(users[0].socketId, "Hello!");
+        });
+        this.socketManager.connect(environment.current.socketURL);
     }
 
     @Restart()
     async onTestWorkerButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/NativeScript/worker-loader
         const worker = new TestWorker();
-        worker.postMessage("John");
-        worker.onmessage = message => this.log = message.data;
+        worker.postMessage("Hello from Worker!");
+        worker.onmessage = message => this.out = message.data;
     }
 
 }

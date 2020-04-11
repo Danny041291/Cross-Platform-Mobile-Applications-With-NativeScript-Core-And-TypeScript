@@ -2,10 +2,10 @@ import { Storable } from "~/infrastructure/storable";
 
 export class Settings extends Storable<Settings> {
 
-    // Define application settings here
+    /* Define your application settings here */
 
-    protected load(settings: Settings) : void {
-        // Set application settings values here
+    protected load(settings?: Settings) : void {
+        // Set the application settings values here
     }
 
 }

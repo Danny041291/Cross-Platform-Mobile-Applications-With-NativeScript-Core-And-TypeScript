@@ -3,6 +3,7 @@ import { ISocketManager } from "./interfaces/isocket-manager";
 import { Injectable } from "~/infrastructure/injectable-decorator";
 import { LoginService } from "~/services/login-service";
 import { LiteEvent } from "~/infrastructure/lite-event";
+import { SocketUser } from "~/models/socket-user";
 
 export class SocketManager implements ISocketManager {
 
@@ -15,9 +16,19 @@ export class SocketManager implements ISocketManager {
     public readonly onMessage = new LiteEvent<any>();
     public readonly onError = new LiteEvent<any>();
 
+    public readonly onUsersList = new LiteEvent<SocketUser[]>();
+    public readonly onUserConnected = new LiteEvent<SocketUser>();
+    public readonly onUserDisconnected = new LiteEvent<SocketUser>();
+
+    public users: Array<SocketUser>;
+
     private _socketIO: SocketIO;
 
-    get isConnected(): boolean {
+    constructor() {
+        this.users = new Array<SocketUser>();
+    }
+
+    get isSocketConnected(): boolean {
         return this._socketIO != null && this._socketIO.connected;
     }
 
@@ -28,16 +39,37 @@ export class SocketManager implements ISocketManager {
         this._socketIO.on('disconnect', (payload) => this.onDisconnect.trigger(payload));
         this._socketIO.on('message', (payload) => this.onMessage.trigger(payload));
         this._socketIO.on('error', (payload) => this.onError.trigger(payload));
+        this._socketIO.on('users-list', (payload: SocketUser[]) => this.setUsersList(payload));
+        this._socketIO.on('user-connected', (payload: SocketUser) => this.addUser(payload));
+        this._socketIO.on('user-disconnected', (payload: SocketUser) => this.removeUser(payload));
         this._socketIO.connect();
     }
 
     public disconnect(): void {
+        if (this._socketIO == null) return;
         this._socketIO.disconnect();
     }
 
-    public sendMessage(to: string, content: string): void {
+    public sendMessage(socketId: string, message: any): void {
         if (this._socketIO == null) return;
-        this._socketIO.emit('message', { username: to, content: content });
+        this._socketIO.emit('message', { socketId: socketId, message: message });
+    }
+
+    private setUsersList(users: SocketUser[]): void {
+        this.users = users;
+        this.onUsersList.trigger(this.users);
+    }
+
+    private addUser(user: SocketUser): void {
+        this.users.push(user);
+        this.onUserConnected.trigger(user)
+    }
+
+    private removeUser(user: SocketUser): void {
+        this.onUserDisconnected.trigger(user);
+        var index = this.users.indexOf(user);
+        if (index == -1) return;
+        this.users.splice(index, 1);
     }
 
 }

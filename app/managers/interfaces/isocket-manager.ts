@@ -1,6 +1,5 @@
 import { LiteEvent } from "~/infrastructure/lite-event";
-
-export type SocketFunction = (args: any) => void
+import { SocketUser } from "~/models/socket-user";
 
 export interface ISocketManager {
 
@@ -10,12 +9,16 @@ export interface ISocketManager {
     onMessage : LiteEvent<any>;
     onError : LiteEvent<any>;
 
-    isConnected : boolean;
+    onUsersList: LiteEvent<SocketUser[]>;
+    onUserConnected: LiteEvent<SocketUser>;
+    onUserDisconnected: LiteEvent<SocketUser>;
+
+    isSocketConnected : boolean;
 
     connect(url: string): void;
 
     disconnect(): void;
 
-    sendMessage(to: string, content: string): void;
+    sendMessage(socketId: string, message: any): void;
 
 }

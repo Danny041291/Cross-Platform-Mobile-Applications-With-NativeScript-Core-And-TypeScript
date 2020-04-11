@@ -17,7 +17,7 @@ https://docs.nativescript.org/ui/components.
             <Button text="{{ L('test_worker') }}" row="3" col="1" tap="{{ onTestWorkerButtonTap }}" />
         </GridLayout>
         <StackLayout row="1" col="0" horizontalAlignment="center">
-            <Label visibility="{{ log ? 'visible' : 'collapse' }}" text="{{ log }}" />
+            <Label visibility="{{ out ? 'visible' : 'collapse' }}" text="{{ out }}" />
             <Cam:CameraPlus visibility="{{ cameraEnabled ? 'visible' : 'collapse' }}" height="{{ cameraHeight }}" id="camPlus">
                 <GridLayout rows="*, auto, auto, auto" columns="*, *">
                     <Button text="Record Video" tap="{{ startRecordingVideo }}" row="1" col="0" />

@@ -3,18 +3,18 @@ import * as CryptoJS from 'crypto-js';
 
 export class Encryptor implements IEncryptor {
 
-    private _encryptor : CryptoJS.CipherHelper;
+    private encryptor : CryptoJS.CipherHelper;
     
     constructor(encryptor: CryptoJS.CipherHelper) {
-        this._encryptor = encryptor;
+        this.encryptor = encryptor;
     }
 
-    public encrypt(value: string, encryptKey: string): string {
-        return this._encryptor.encrypt(value, encryptKey).toString();
+    public encrypt(value: string, encryptionKey: string): string {
+        return this.encryptor.encrypt(value, encryptionKey).toString();
     }
 
-    public decrypt(value: string, encryptKey: string): string {
-        return this._encryptor.decrypt(value, encryptKey).toString();
+    public decrypt(value: string, encryptionKey: string): string {
+        return CryptoJS.enc.Utf8.stringify(this.encryptor.decrypt(value, encryptionKey));
     }
 
 }

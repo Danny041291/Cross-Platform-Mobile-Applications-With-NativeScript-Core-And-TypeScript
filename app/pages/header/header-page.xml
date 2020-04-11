@@ -4,7 +4,7 @@
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="My NativeScript Core App">
+        <ActionBar title="My First Project">
            <android>
                 <NavigationButton icon="res://ic_menu" tap="{{ onMenuButtonTap }}" />
             </android>

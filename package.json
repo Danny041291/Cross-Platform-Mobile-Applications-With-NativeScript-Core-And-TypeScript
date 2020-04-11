@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "id": "org.nativescript.mynativetypescriptapp",
+    "id": "org.nativescript.myfirstproject",
     "tns-ios": {
       "version": "6.1.0"
     },

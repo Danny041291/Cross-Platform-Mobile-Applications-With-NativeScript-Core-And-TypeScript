@@ -1,10 +1,11 @@
+import { STORAGE_KEYS } from "~/config/enums";
 
 export interface IStorage {
 
-    store(key: string, data: any, volatile?: boolean, encryptKey?: string): void;
+    store(data: any, storageKey: STORAGE_KEYS, encryptionKey?: string, volatile?: boolean): void;
 
-    load<T>(key: string, volatile?: boolean, encryptKey?: string): T;
+    load(storageKey: STORAGE_KEYS, encryptionKey?: string, volatile?: boolean): any;
 
-    delete(key: string, volatile?: boolean): void;
+    delete(key: STORAGE_KEYS, volatile?: boolean): void;
 
 }

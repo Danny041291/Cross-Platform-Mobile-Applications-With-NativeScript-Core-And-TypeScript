@@ -1,18 +1,19 @@
 import { Observable } from "tns-core-modules/data/observable";
 import { Injectable } from "~/infrastructure/injectable-decorator";
-import { EventDispatcher } from "~/services/event-dispatcher";
+import { GlobalEventsDispatcher } from "~/infrastructure/global-events-dispatcher";
+import { EVENTS } from "~/config/enums";
 
 export class HeaderViewModel extends Observable {
 
     @Injectable
-    eventDispatcher: EventDispatcher;
+    globalEventsDispatcher: GlobalEventsDispatcher;
 
     constructor() {
         super();
     }
 
     onMenuButtonTap(): void {
-        this.eventDispatcher.onMenuToggle.trigger();
+        this.globalEventsDispatcher.triggerEvent(EVENTS.TOGGLE_MENU);
     }
 
 }

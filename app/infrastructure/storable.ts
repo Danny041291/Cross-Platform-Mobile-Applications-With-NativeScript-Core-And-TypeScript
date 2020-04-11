@@ -1,31 +1,31 @@
 import { IStorable } from "./interfaces/istorable";
 import { Storage } from "./storage";
+import { STORAGE_KEYS } from "~/config/enums";
 
 export abstract class Storable<T> implements IStorable {
 
-    private _storage: Storage;
-    private _storage_key: string;
-    private _volatile: boolean;
-    private _encryptKey: string;
+    private storage: Storage;
+    private storageKey: STORAGE_KEYS;
+    private encryptionKey: string;
+    private volatile: boolean;
 
-    constructor(storage: Storage, storage_key: string, volatile: boolean = false, encryptKey?: string) {
-        this._storage = storage;
-        this._storage_key = storage_key;
-        this._volatile = volatile;
-        this._encryptKey = encryptKey;
-        var storable = this._storage.load<T>(storage_key, this._volatile, this._encryptKey);
-        this.load(storable);
+    constructor(storage: Storage, storageKey: STORAGE_KEYS, encryptionKey?: string, volatile?: boolean) {
+        this.storage = storage;
+        this.storageKey = storageKey;
+        this.encryptionKey = encryptionKey;
+        this.volatile = volatile;
+        this.load(this.storage.load(storageKey, encryptionKey, volatile));
     }
 
-    protected abstract load(storable: T): void;
+    protected abstract load(storable?: any): void;
 
     public update() {
-        this._storage.store(this._storage_key, this, this._volatile, this._encryptKey);
+        this.storage.store(this, this.storageKey, this.encryptionKey, this.volatile);
     }
 
     public delete() {
-        this._storage.delete(this._storage_key, this._volatile);
-        this.load(null);
+        this.storage.delete(this.storageKey, this.volatile);
+        this.load();
     }
 
 }

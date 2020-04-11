@@ -7,21 +7,33 @@ import * as CryptoJS from "crypto-js";
 import { GPSManager } from "~/managers/gps-manager";
 import { AccelerometerManager } from "~/managers/accelerometer-manager";
 import { SocketManager } from "~/managers/socket-manager";
-import { EventDispatcher } from "~/services/event-dispatcher";
+import { GlobalEventsDispatcher } from "~/infrastructure/global-events-dispatcher";
 import { LoginService } from "~/services/login-service";
+import { Logger } from "~/infrastructure/logger";
+import { EVENTS } from "./enums";
+import { IdentityService } from "~/services/identity-service";
 
 export class Bindings {
 
     public static bind(): void {
+        IoCContainer.register(Logger);
         IoCContainer.bind(Encryptor, new Encryptor(CryptoJS.AES));
-        IoCContainer.register(EventDispatcher);
+        IoCContainer.bind(GlobalEventsDispatcher, this.GetGlobalEventsDispatcher());
         IoCContainer.register(HttpClient);
         IoCContainer.register(Storage);
         IoCContainer.register(CameraManager);
         IoCContainer.register(GPSManager);
         IoCContainer.register(AccelerometerManager);
-        IoCContainer.register(SocketManager); 
         IoCContainer.register(LoginService);
+        IoCContainer.register(SocketManager); 
+        IoCContainer.register(IdentityService);
+    }
+
+    /* Register here your globals events */
+    private static GetGlobalEventsDispatcher() : GlobalEventsDispatcher {
+        var globalsEventsDispather = new GlobalEventsDispatcher();
+        globalsEventsDispather.addEvent(EVENTS.TOGGLE_MENU);
+        return globalsEventsDispather;
     }
 
 }

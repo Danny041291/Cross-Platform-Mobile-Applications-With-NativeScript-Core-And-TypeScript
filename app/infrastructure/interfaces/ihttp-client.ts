@@ -1,10 +1,17 @@
+import { User } from "~/models/user";
+import { IBuildable } from "./ibuildable";
+
 export interface IHttpClient {
 
-    put<T>(url: string, content: any, headers?: any): Promise<T>;
+    setAuthenticationUser(user: User) : void;
 
-    get<T>(url: string, headers?: any): Promise<T>;
+    removeAuthenticationUser() : void;
 
-    post<T>(url: string, content: any, headers?: any): Promise<T>;
+    put<T extends IBuildable>(type: (new () => T), url: string, content: any, headers?: any): Promise<T>;
+
+    get<T extends IBuildable>(type: (new () => T), url: string, headers?: any): Promise<T>;
+
+    post<T extends IBuildable>(type: (new () => T), url: string, content: any, headers?: any): Promise<T>;
 
     delete(url: string, headers?: any): Promise<void>;
 

@@ -1,12 +1,11 @@
 import { ILoginService } from "./interfaces/ilogin-service";
-import { User } from "~/models/user";
+import { User, UserDto } from "~/models/user";
 import { Injectable } from "~/infrastructure/injectable-decorator";
-import { USER_STORAGE_KEY } from "~/config/constant";
 import { Storage } from "~/infrastructure/storage";
 import { HttpClient } from "~/infrastructure/http-client";
 import { LiteEvent } from "~/infrastructure/lite-event";
+import { STORAGE_KEYS } from "~/config/enums";
 import environment from "~/environments/environment";
-import { UserDto } from "~/models/user-dto";
 
 export class LoginService implements ILoginService {
 
@@ -16,38 +15,32 @@ export class LoginService implements ILoginService {
   @Injectable
   storage: Storage;
 
-  private _user: User;
-
   public readonly onUserLogin = new LiteEvent<void>();
   public readonly onUserLogout = new LiteEvent<void>();
 
+  public user: User;
+
   constructor() {
-    this._user = new User(this.storage, USER_STORAGE_KEY);
+    this.user = new User(this.storage, STORAGE_KEYS.USER, environment.current.clientSecret, false);
   }
 
-  get user() {
-    return this._user;
-  }
-
-  public async login(username: string, password: string, rememberMe: boolean): Promise<void> {
+  public async login(username: string, password: string, rememberMe: boolean) : Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let body = `username=${username}&password=${password}&clientId=${environment.current.clientId}`;
+      let body = `username=${username}&password=${password}&client_id=${environment.current.clientId}&grant_type=auth_token`;
       let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-      var user = await this.httpClient.post<UserDto>(`${environment.current.loginUrl}`, body, headers);
+      var user = await this.httpClient.post(UserDto, `${environment.current.tokenEndPoint}`, body, headers);
       if (user == null) reject("Login error.");
-      this._user = new User(this.storage, USER_STORAGE_KEY, !rememberMe, user.encryptKey);
-      this._user.username = username;
-      this._user.token = user.token;
-      this._user.refreshToken = user.refreshToken;
-      this._user.encryptKey = user.encryptKey;
-      this._user.update();
+      this.user = new User(this.storage, STORAGE_KEYS.USER, environment.current.clientSecret, !rememberMe);
+      this.user.build(user);
+      this.httpClient.setAuthenticationUser(this.user);
       this.onUserLogin.trigger();
       resolve();
     });
   }
 
   public logout(): void {
-    this._user.delete();
+    this.user.delete();
+    this.httpClient.removeAuthenticationUser();
     this.onUserLogout.trigger();
   }
 

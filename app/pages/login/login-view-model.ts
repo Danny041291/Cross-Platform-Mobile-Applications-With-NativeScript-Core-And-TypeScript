@@ -5,11 +5,19 @@ import { Button } from "tns-core-modules/ui/button";
 import { Page } from "tns-core-modules/ui/page";
 import { Injectable } from "~/infrastructure/injectable-decorator";
 import { RadDataForm } from "nativescript-ui-dataform";
+import { Logger } from "~/infrastructure/logger";
+import { IdentityService } from "~/services/identity-service";
 
 export class LoginViewModel extends Observable {
 
     @Injectable
     loginService: LoginService;
+
+    @Injectable
+    identityService: IdentityService;
+
+    @Injectable
+    logger: Logger;
 
     private _loginDataForm: RadDataForm;
 
@@ -30,12 +38,16 @@ export class LoginViewModel extends Observable {
         if (!valid) return;
         const button: Button = <Button>args.object;
         const page: Page = button.page;
+
         try {
             await this.loginService.login(this.loginForm.username, this.loginForm.password, this.loginForm.rememberMe);
+            await this.identityService.loadIdentity(this.loginForm.rememberMe);
             page.frame.navigate("/pages/home/home-page");
         } catch (error) {
-            // Show error message
+            this.logger.error("Login error.");
         }
+        
     }
+
 
 }

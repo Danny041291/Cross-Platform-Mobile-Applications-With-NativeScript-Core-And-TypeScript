@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My NativeScript Core App</string>
-    <string name="title_activity_kimera">My NativeScript Core App</string>
+    <string name="app_name">My First Project</string>
+    <string name="title_activity_kimera">My First Project</string>
     <string name="hello">Ciao!</string>
     <string formatted="false" name="hello_replace">Ciao %s!</string>
     <string formatted="false" name="multi_replace">Possiamo sostituire direttamente dall\'xml: %s o dal modello: %s</string>
-    <string formatted="false" name="test_dialog">Prova le Dialog</string>
-    <string formatted="false" name="test_toast">Prova i Toast</string>
-    <string formatted="false" name="test_notification">Prova le Notifiche</string>
+    <string formatted="false" name="test_dialog">Prova Dialog</string>
+    <string formatted="false" name="test_toast">Prova Toast</string>
+    <string formatted="false" name="test_notification">Prova Notifica</string>
     <string formatted="false" name="test_accelerometer">Prova Accellerometro</string>
-    <string formatted="false" name="test_gps">Prova il GPS</string>
-    <string formatted="false" name="test_camera">Prova la Camera</string>
-    <string formatted="false" name="test_socket">Prova la Socket</string>
-    <string formatted="false" name="test_worker">Prova i Worker</string>
+    <string formatted="false" name="test_gps">Prova GPS</string>
+    <string formatted="false" name="test_camera">Prova Camera</string>
+    <string formatted="false" name="test_socket">Prova Socket</string>
+    <string formatted="false" name="test_worker">Prova Worker</string>
 </resources>
