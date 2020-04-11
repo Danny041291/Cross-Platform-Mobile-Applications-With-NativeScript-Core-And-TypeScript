@@ -32,10 +32,12 @@ export class IdentityService implements IIdentitySrvice {
     return new Promise(async (resolve, reject) => {
       var identity = await this.httpClient.get(IdentityDto, environment.current.apiPath + '/v1/users/me');
       if (identity == null || !identity.allowed) reject("Forbidden.");
-      this.identity = new Identity(this.storage, STORAGE_KEYS.IDENTITY, environment.current.clientSecret, !rememberMe);
-      this.identity.build(identity);
-      this.onIdentityLoaded.trigger();
-      resolve();
+      else {
+        this.identity = new Identity(this.storage, STORAGE_KEYS.IDENTITY, environment.current.clientSecret, !rememberMe);
+        this.identity.build(identity);
+        this.onIdentityLoaded.trigger();
+        resolve();
+      }
     });
   }
 

@@ -17,41 +17,45 @@ export class HttpClient implements IHttpClient {
     }
 
     async put<T extends IBuildable>(type: (new () => T), url: string, content: any, headers?: any): Promise<T> {
-        var req = request({
+        var options = {
             url: url,
             method: "PUT",
             headers: this.getHeaders(headers),
             content: typeof content === "string" ? content : JSON.stringify(content)
-        });
-        return this.fetchResponse<T>(type, req);
+        };
+        var req = request(options);
+        return this.fetchResponse<T>(type, req, options);
     }
 
     async get<T extends IBuildable>(type: (new () => T), url: string, headers?: any): Promise<T> {
-        var req = request({
+        var options = {
             url: url,
             method: "GET",
             headers: this.getHeaders(headers),
-        });
-        return this.fetchResponse<T>(type, req);
+        };
+        var req = request(options);
+        return this.fetchResponse<T>(type, req, options);
     }
 
     async post<T extends IBuildable>(type: (new () => T), url: string, content: any, headers?: any): Promise<T> {
-        var req = request({
+        var options = {
             url: url,
             method: "POST",
             headers: this.getHeaders(headers),
             content: typeof content === "string" ? content : JSON.stringify(content)
-        });
-        return this.fetchResponse<T>(type, req);
+        };
+        var req = request(options);
+        return this.fetchResponse<T>(type, req, options);
     }
 
     async delete(url: string, headers?: any): Promise<void> {
-        var request = request({
+        var options = {
             url: url,
             method: "DELETE",
             headers: this.getHeaders(headers),
-        });
-        return this.fetchResponse<any>(null, request);
+        };
+        var req = request(options);
+        return this.fetchResponse<any>(null, req, options);
     }
 
     private getHeaders(headers?: any): any {
@@ -60,32 +64,39 @@ export class HttpClient implements IHttpClient {
         return headers;
     }
 
-    private async fetchResponse<T extends IBuildable>(type: (new () => T), req: any): Promise<T> {
+    private async fetchResponse<T extends IBuildable>(type: (new () => T), req: any, opts: any): Promise<T> {
         return new Promise(async (resolve, reject) => {
-            var response = await req;
-            if (response.statusCode >= 400) {
-                if (response.statusCode == 401) {
+            var res = await req;
+            if (res.statusCode < 400) {
+                if(!type) resolve();
+                else {
+                    var obj = new type();
+                    obj.build(res.content.toJSON());
+                    resolve(obj);
+                }
+            } else {
+                if (res.statusCode != 401) reject(res.statusCode);
+                else {
                     if(!this.user || !this.user.isLogged) reject("Unauthorized.");
                     else {
                         await this.refreshToken();
-                        response = await req;
-                        if (response.statusCode == 401) reject("Unauthorized.");
+                        res = await request({
+                            url: opts.url,
+                            method: opts.method,
+                            headers: this.getHeaders(opts.headers),
+                            content: opts.content
+                        });
+                        if (res.statusCode >= 400) 
+                            reject(res.statusCode == 401 ? "Unauthorized." : res.statusCode);
                         else {
                             if(!type) resolve();
                             else {
                                 var obj = new type();
-                                obj.build(response.content.toJSON());
+                                obj.build(res.content.toJSON());
                                 resolve(obj);
                             }
                         }
                     }
-                } else reject(response.statusCode);
-            } else {
-                if(!type) resolve();
-                else {
-                    var obj = new type();
-                    obj.build(response.content.toJSON());
-                    resolve(obj);
                 }
             }
         });
@@ -93,12 +104,14 @@ export class HttpClient implements IHttpClient {
 
     private async refreshToken(): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            let body = `client_id=${environment.current.clientId}&client_secret=${environment.current.clientSecret}&grant_type=refresh_token&refresh_token="${this.user.refreshToken}"`;
+            let body = `client_id=${environment.current.clientId}&client_secret=${environment.current.clientSecret}&grant_type=refresh_token&refresh_token=${this.user.refreshToken}`;
             let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
             var user = await this.post(UserDto, `${environment.current.tokenEndPoint}`, body, headers);
             if (user == null) reject();
-            this.user.build(user);
-            resolve();
+            else {
+                this.user.build(user);
+                resolve();
+            }
         });
     }
 

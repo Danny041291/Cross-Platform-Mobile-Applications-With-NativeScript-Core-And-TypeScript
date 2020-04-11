@@ -2,3 +2,7 @@
 StackLayout > * {
     margin: 5;
 }
+
+.error-text {
+    color: red;
+}

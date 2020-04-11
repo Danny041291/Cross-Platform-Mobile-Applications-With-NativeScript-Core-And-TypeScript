@@ -19,9 +19,12 @@ export class GPSManager implements IGPSManager {
 
     public async getLocation(): Promise<geolocation.Location> {
         return new Promise(async (resolve, reject) => {
-            if (!this.hasPermission) reject("You need to get the localization permissions before.");
-            var location = await geolocation.getCurrentLocation({});
-            resolve(location);
+            if (!this.hasPermission) 
+                reject("You need to get the localization permissions before.");
+            else {
+                var location = await geolocation.getCurrentLocation({});
+                resolve(location);
+            }
         });
     }
 

@@ -34,6 +34,7 @@
                 </df:EntityProperty>
             </df:RadDataForm.properties>
         </df:RadDataForm>
+         <Label visibility="{{ loginError ? 'visible' : 'collapse' }}" text="{{ loginError }}" class="error-text" />
         <Button text="Login" tap="{{ onLoginButtonTap }}" />
     </StackLayout>
 </Page>

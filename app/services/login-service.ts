@@ -26,16 +26,22 @@ export class LoginService implements ILoginService {
 
   public async login(username: string, password: string, rememberMe: boolean) : Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let body = `username=${username}&password=${password}&client_id=${environment.current.clientId}&grant_type=auth_token`;
-      let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-      var user = await this.httpClient.post(UserDto, `${environment.current.tokenEndPoint}`, body, headers);
-      if (user == null) reject("Login error.");
+      var body = `username=${username}&password=${password}&client_id=${environment.current.clientId}&grant_type=auth_token`;
+      var headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+      var user : UserDto;
+      try {
+        user = await this.httpClient.post(UserDto, `${environment.current.tokenEndPoint}`, body, headers);
+      } catch(error) {
+        reject(error);
+        return;
+      }
       this.user = new User(this.storage, STORAGE_KEYS.USER, environment.current.clientSecret, !rememberMe);
       this.user.build(user);
       this.httpClient.setAuthenticationUser(this.user);
       this.onUserLogin.trigger();
       resolve();
     });
+    
   }
 
   public logout(): void {

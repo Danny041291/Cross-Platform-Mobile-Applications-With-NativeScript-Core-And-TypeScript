@@ -21,6 +21,7 @@ export class LoginViewModel extends Observable {
 
     private _loginDataForm: RadDataForm;
 
+    @ObservableProperty() loginError: string;
     @ObservableProperty()
     loginForm = {
         username: null,
@@ -33,20 +34,20 @@ export class LoginViewModel extends Observable {
         this._loginDataForm = <RadDataForm>page.getViewById("loginForm");
     }
 
-    async onLoginButtonTap(args: EventData): Promise<void> {
+    async onLoginButtonTap(args: EventData) : Promise<void> {
+        this.loginError = null;
         var valid = await this._loginDataForm.validateAll();
         if (!valid) return;
         const button: Button = <Button>args.object;
         const page: Page = button.page;
-
         try {
             await this.loginService.login(this.loginForm.username, this.loginForm.password, this.loginForm.rememberMe);
             await this.identityService.loadIdentity(this.loginForm.rememberMe);
             page.frame.navigate("/pages/home/home-page");
         } catch (error) {
+            this.loginError = "Invalid username and/or password.";
             this.logger.error("Login error.");
         }
-        
     }
 
 
