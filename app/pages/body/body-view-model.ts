@@ -7,6 +7,7 @@ import { topmost } from "tns-core-modules/ui/frame/frame";
 import { ObservableProperty } from "~/infrastructure/observable-property-decorator";
 import { exit } from 'nativescript-exit';
 import { EVENTS } from "~/config/enums";
+import { IdentityService } from "~/services/identity-service";
 
 export class BodyViewModel extends Observable {
 
@@ -15,6 +16,9 @@ export class BodyViewModel extends Observable {
 
     @Injectable
     loginService: LoginService;
+
+    @Injectable
+    identityService: IdentityService;
 
     @ObservableProperty() username: string;
     @ObservableProperty() menuFooterItems = new Array<string>("Information", "About Us", "Privacy");
@@ -36,6 +40,7 @@ export class BodyViewModel extends Observable {
 
     onLogoutButtonTap(args: EventData): void {
         this.loginService.logout();
+        this.identityService.unloadIdentity();
         this._drawer.toggleDrawerState();
         topmost().navigate("/pages/login/login-page");
     }

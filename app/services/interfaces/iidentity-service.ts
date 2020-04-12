@@ -1,6 +1,6 @@
 import { LiteEvent } from "~/infrastructure/lite-event";
 
-export interface IIdentitySrvice {
+export interface IIdentityService {
 
     onIdentityLoaded : LiteEvent<void>;
     onIdentityUnloaded : LiteEvent<void>;

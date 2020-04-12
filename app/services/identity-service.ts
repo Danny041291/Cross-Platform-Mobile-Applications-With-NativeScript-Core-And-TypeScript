@@ -6,9 +6,9 @@ import { Storage } from "~/infrastructure/storage";
 import environment from "~/environments/environment";
 import { LiteEvent } from "~/infrastructure/lite-event";
 import { LoginService } from "./login-service";
-import { IIdentitySrvice } from "./interfaces/iidentity-service";
+import { IIdentityService } from "./interfaces/iidentity-service";
 
-export class IdentityService implements IIdentitySrvice {
+export class IdentityService implements IIdentityService {
 
   @Injectable
   httpClient: HttpClient;

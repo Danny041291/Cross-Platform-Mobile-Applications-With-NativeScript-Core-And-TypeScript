@@ -12,6 +12,7 @@ import { LoginService } from "~/services/login-service";
 import { Logger } from "~/infrastructure/logger";
 import { EVENTS } from "./enums";
 import { IdentityService } from "~/services/identity-service";
+import { SettingsService } from "~/services/settings-service";
 
 export class Bindings {
 
@@ -21,6 +22,7 @@ export class Bindings {
         IoCContainer.bind(GlobalEventsDispatcher, this.GetGlobalEventsDispatcher());
         IoCContainer.register(HttpClient);
         IoCContainer.register(Storage);
+        IoCContainer.register(SettingsService);
         IoCContainer.register(CameraManager);
         IoCContainer.register(GPSManager);
         IoCContainer.register(AccelerometerManager);

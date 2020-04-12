@@ -60,15 +60,16 @@ export class HomeViewModel extends Observable {
     async onTestNotificationButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/EddyVerbruggen/nativescript-local-notifications
         var hasPermission = await LocalNotifications.hasPermission();
-        if (!hasPermission) throw Error("No permissions for local notifications");
-        var scheduled = await LocalNotifications.schedule([{
-            id: 1,
-            title: 'Title',
-            body: 'Body',
-            groupedMessages: ["First", "Second..."],
-            groupSummary: "Group summary"
-        }]);
-        this.out = "Notification '" + scheduled[0] + "' shown.";
+        if (hasPermission) {
+            var scheduled = await LocalNotifications.schedule([{
+                id: 1,
+                title: 'Title',
+                body: 'Body',
+                groupedMessages: ["First", "Second..."],
+                groupSummary: "Group summary"
+            }]);
+            this.out = "Notification '" + scheduled[0] + "' shown.";
+        } else this.out = "No permissions for local notifications";
     }
 
     @Restart()
@@ -92,11 +93,12 @@ export class HomeViewModel extends Observable {
     @Restart()
     async onTestCameraButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/nstudio/nativescript-camera-plus
-        var cameraOptions = { height: 400, saveToGallery: false };
-        var chooseOptions = { showImages: true, showVideos: true, height: 300 };
+        var camOpts = { height: 400, saveToGallery: false };
+        var chooseOpts = { showImages: true, showVideos: true, height: 300 };
+        var camView = this._page.getViewById('camPlus');
         this.cameraEnabled = true;
-        this.cameraHeight = cameraOptions.height;
-        this.cameraManager.initCamera(this._page.getViewById('camPlus'), cameraOptions, chooseOptions, false);
+        this.cameraHeight = camOpts.height;
+        this.cameraManager.initCamera(camView, camOpts, chooseOpts, false);
         var hasCameraPermission = await this.cameraManager.getCameraPermissions();
         if (!hasCameraPermission) {
             this.out = "Error during the camera permissions request.";
@@ -169,8 +171,8 @@ export class HomeViewModel extends Observable {
     async onTestWorkerButtonTap(args: EventData): Promise<void> {
         // More details at: https://github.com/NativeScript/worker-loader
         const worker = new TestWorker();
-        worker.postMessage("Hello from Worker!");
         worker.onmessage = message => this.out = message.data;
+        worker.postMessage("Hello from Worker!");
     }
 
 }
