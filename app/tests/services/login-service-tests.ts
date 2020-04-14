@@ -22,7 +22,7 @@ describe("Login Service", () => {
         loginService = new LoginService();
     });
 
-    it("Should update user after login sucess", async () => {
+    it("Should update the user after the login", async () => {
         var user = new UserDto();
         user.username = "Username";
         user.token  = "4q9jgK66Ex7rbpmSgLah5dSRPL67RsneBTBD";
@@ -35,7 +35,7 @@ describe("Login Service", () => {
         expect(loginService.user.refreshToken).toEqual("GWazMBLRfPUAfejTkgM8YjJC753yfSwwvXZW");
     });
 
-    it("Should clean user after logout", async () => {
+    it("Should clean the user after the logout", async () => {
         var user = new UserDto();
         user.username = "Username";
         user.token  = "4q9jgK66Ex7rbpmSgLah5dSRPL67RsneBTBD";

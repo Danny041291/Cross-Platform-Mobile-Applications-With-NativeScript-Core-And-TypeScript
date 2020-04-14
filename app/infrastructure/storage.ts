@@ -16,26 +16,22 @@ export class Storage implements IStorage {
     }
 
     public store(data: any, storageKey: STORAGE_KEYS, encryptionKey?: string, volatile?: boolean): void {
-        if (volatile) {
-            this.volatileStorage.set(storageKey, encryptionKey ? this.encryptor.encrypt(JSON.stringify(data), encryptionKey) : JSON.stringify(data));
-            return;
-        }
-        appSettings.setString(storageKey, encryptionKey ? this.encryptor.encrypt(JSON.stringify(data), encryptionKey) : JSON.stringify(data));
-        appSettings.flush();
+        if (volatile!) {
+            appSettings.setString(storageKey, encryptionKey ? this.encryptor.encrypt(JSON.stringify(data), encryptionKey) : JSON.stringify(data));
+            appSettings.flush();
+        } else this.volatileStorage.set(storageKey, encryptionKey ? this.encryptor.encrypt(JSON.stringify(data), encryptionKey) : JSON.stringify(data));
     }
 
     public load(storageKey: STORAGE_KEYS, encryptionKey?: string, volatile?: boolean): any {
         var encryptedString: string;
-        if (volatile)
-            encryptedString = this.volatileStorage.get(storageKey);
+        if (volatile) encryptedString = this.volatileStorage.get(storageKey);
         else encryptedString = appSettings.getString(storageKey);
         if(!encryptedString) return null;
         return encryptionKey ? JSON.parse(this.encryptor.decrypt(encryptedString, encryptionKey)) : JSON.parse(encryptedString);
     }
 
     public delete(storageKey: STORAGE_KEYS, volatile?: boolean): void {
-        if (volatile)
-            this.volatileStorage.delete(storageKey);
+        if (volatile) this.volatileStorage.delete(storageKey);
         else {
             appSettings.remove(storageKey);
             appSettings.flush();

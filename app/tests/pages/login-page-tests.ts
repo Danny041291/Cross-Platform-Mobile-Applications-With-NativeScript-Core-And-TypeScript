@@ -27,7 +27,7 @@ describe("Login Page", () => {
     loginViewModel = new LoginViewModel(page);
   });
 
-  it("Should call login service after Login button tap", async () => {
+  it("Should call the login service after tapping the 'Login' button", async () => {
     var frame = new Frame();
     spyOn(frame, 'navigate').withArgs("/pages/home/home-page");
     spyOnProperty(page, 'frame').and.returnValue(frame);

@@ -86,8 +86,7 @@ export class HttpClient implements IHttpClient {
                             headers: this.getHeaders(opts.headers),
                             content: opts.content
                         });
-                        if (res.statusCode >= 400) 
-                            reject(res.statusCode == 401 ? "Unauthorized." : res.statusCode);
+                        if (res.statusCode >= 400) reject(res.statusCode == 401 ? "Unauthorized." : res.statusCode);
                         else {
                             if(!type) resolve();
                             else {

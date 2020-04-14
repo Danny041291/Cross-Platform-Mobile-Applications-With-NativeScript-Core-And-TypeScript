@@ -1,4 +1,3 @@
-
 export interface IGlobalEventsDispatcher {
 
     addEvent<T>(id: string);
