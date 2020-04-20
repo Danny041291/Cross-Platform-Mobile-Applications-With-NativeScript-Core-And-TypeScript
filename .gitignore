@@ -5,7 +5,7 @@ platforms/
 
 # NativeScript Template
 *.js.map
-*.js
+app/*.js
 !webpack.config.js
 
 # Logs
